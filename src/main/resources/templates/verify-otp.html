@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head}">
+    <title>Verify OTP</title>
+</head>
+<body>
+    <div th:replace="~{fragments/header :: navbar}"></div>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="card shadow-lg mt-5">
+                    <div class="card-body p-5">
+                        <div class="text-center mb-4">
+                            <i class="bi bi-shield-lock text-primary" style="font-size: 3rem;"></i>
+                            <h2 class="fw-bold mt-2">Verify Your Account</h2>
+                            <p class="text-muted">An OTP has been sent to your email.</p>
+                        </div>
+                        
+                        <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
+                        
+                        <form th:action="@{/verify-otp}" method="post">
+                            <input type="hidden" name="email" th:value="${email}" />
+                            
+                            <div class="mb-4">
+                                <label for="otp" class="form-label">6-Digit OTP</label>
+                                <input type="text" class="form-control form-control-lg text-center fw-bold" id="otp" name="otp" required maxlength="6" style="letter-spacing: 5px;">
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary w-100 btn-lg mb-3">Verify Account</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/header :: chatbot-widget}"></div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

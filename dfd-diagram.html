@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfect Data Flow Diagram - Level 0</title>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 40px;
+        }
+        h2 {
+            color: #154360;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .mermaid {
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border: 1px solid #e0e0e0;
+        }
+        .instructions {
+            margin-top: 20px;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <h2>DATA FLOW DIAGRAM (DFD) - LEVEL 0</h2>
+    
+    <div class="mermaid">
+        flowchart LR
+            %% Styling
+            classDef external fill:#D6EAF8,stroke:#2874A6,stroke-width:2px,color:#154360,font-weight:bold,font-size:14px;
+            classDef system fill:#EBF5FB,stroke:#2874A6,stroke-width:3px,color:#154360,font-weight:bold,font-size:16px;
+            classDef process1 fill:#D5F5E3,stroke:#239B56,stroke-width:2px,color:#145A32,font-size:13px;
+            classDef process2 fill:#FCF3CF,stroke:#D4AC0D,stroke-width:2px,color:#7D6608,font-size:13px;
+            classDef process3 fill:#E8DAEF,stroke:#76448A,stroke-width:2px,color:#4A235A,font-size:13px;
+            classDef process4 fill:#FADBD8,stroke:#B03A2E,stroke-width:2px,color:#78281F,font-size:13px;
+            classDef datastore fill:#FFFFFF,stroke:#7F8C8D,stroke-width:2px,color:#2C3E50,font-weight:bold;
+
+            %% Node Definitions
+            User["EXTERNAL ENTITY<br/><br/>USER<br/>(Student / Admin)"]:::external
+            
+            Sys["0<br/><br/>CAMPUS EVENT<br/>MANAGEMENT<br/>SYSTEM"]:::system
+
+            P1["1.0<br/>USER MANAGEMENT<br/>(Register, Login, Profile)"]:::process1
+            P2["2.0<br/>EVENT MANAGEMENT<br/>(Create, View, Search)"]:::process2
+            P3["3.0<br/>REGISTRATION<br/>(Register, View)"]:::process3
+            P4["4.0<br/>AUTHENTICATION<br/>(Login Validation)"]:::process4
+
+            DS1[("D1 USERS")]:::datastore
+            DS2[("D2 EVENTS")]:::datastore
+            DS3[("D3 REGISTRATIONS")]:::datastore
+            DS4[("D4 ROLES")]:::datastore
+
+            %% Edge Connections
+            User -->| "<b>Data Inputs:</b><br/>1. Register / Login<br/>2. Browse Events<br/>3. Register for Event<br/>4. View Registrations" | Sys
+            Sys -->| "<b>System Outputs:</b><br/>1. Event Listings<br/>2. Registration Confirm<br/>3. Profile Info<br/>4. Notifications" | User
+
+            Sys ---> P1
+            Sys ---> P2
+            Sys ---> P3
+            Sys ---> P4
+
+            P1 ---> DS1
+            P2 ---> DS2
+            P3 ---> DS3
+            P4 ---> DS4
+    </div>
+
+    <p class="instructions">Tip: You can take a screenshot of this diagram. The data flows have been grouped to prevent text overlapping and congestion.</p>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head}"></head>
+<body>
+    <div th:replace="~{fragments/header :: navbar}"></div>
+
+    <div class="container mt-4">
+        <h2 class="mb-4">My Dashboard</h2>
+        
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${successMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${errorMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0">My Registered Events</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Event Title</th>
+                                <th>Date & Time</th>
+                                <th>Location</th>
+                                <th>Status</th>
+                                <th>QR Code</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="reg : ${registrations}">
+                                <td class="fw-bold">
+                                    <a th:href="@{/events/{id}(id=${reg.event.id})}" th:text="${reg.event.title}" class="text-decoration-none">Title</a>
+                                </td>
+                                <td th:text="${#temporals.format(reg.event.date, 'dd MMM yyyy HH:mm')}">Date</td>
+                                <td th:text="${reg.event.location}">Location</td>
+                                <td>
+                                    <span class="badge" th:classappend="${reg.status == 'REGISTERED' ? 'bg-success' : (reg.status == 'CANCELLED' ? 'bg-danger' : 'bg-secondary')}" th:text="${reg.status}">Status</span>
+                                </td>
+                                <td>
+                                    <img th:if="${reg.qrCodeData != null and reg.status == 'REGISTERED'}" th:src="${reg.qrCodeData}" width="50" height="50" alt="QR Code" class="img-thumbnail" style="cursor: pointer;" onclick="window.open(this.src)">
+                                    <span th:unless="${reg.qrCodeData != null and reg.status == 'REGISTERED'}" class="text-muted small">-</span>
+                                </td>
+                                <td>
+                                    <form th:if="${reg.status == 'REGISTERED'}" th:action="@{/student/registrations/{id}/cancel(id=${reg.id})}" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to cancel this registration?');">Cancel</button>
+                                    </form>
+                                    <button th:if="${reg.status == 'ATTENDED'}" class="btn btn-sm btn-outline-primary" disabled>Give Feedback</button>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(registrations)}">
+                                <td colspan="6" class="text-center py-5">
+                                    <p class="text-muted mb-3">You haven't registered for any events yet.</p>
+                                    <a href="/events" class="btn btn-primary">Browse Events</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/header :: chatbot-widget}"></div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

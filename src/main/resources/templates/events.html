@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head}"></head>
+<body>
+    <div th:replace="~{fragments/header :: navbar}"></div>
+
+    <div class="container mt-4">
+        <!-- Hero Section -->
+        <div class="p-5 mb-4 bg-primary text-white rounded-3">
+            <div class="container-fluid py-2">
+                <h1 class="display-5 fw-bold">Discover Campus Events</h1>
+                <p class="col-md-8 fs-4">Join workshops, seminars, and hackathons happening around the campus.</p>
+            </div>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+                <form th:action="@{/events}" method="get" class="row g-3">
+                    <div class="col-md-4">
+                        <input type="text" name="keyword" class="form-control" placeholder="Search by keyword..." th:value="${keyword}">
+                    </div>
+                    <div class="col-md-3">
+                        <select name="department" class="form-select">
+                            <option value="">All Departments</option>
+                            <option value="Computer Science" th:selected="${department == 'Computer Science'}">Computer Science</option>
+                            <option value="Engineering" th:selected="${department == 'Engineering'}">Engineering</option>
+                            <option value="Business" th:selected="${department == 'Business'}">Business</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select name="type" class="form-select">
+                            <option value="">All Types</option>
+                            <option value="Workshop" th:selected="${type == 'Workshop'}">Workshop</option>
+                            <option value="Seminar" th:selected="${type == 'Seminar'}">Seminar</option>
+                            <option value="Hackathon" th:selected="${type == 'Hackathon'}">Hackathon</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">Filter</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Event Grid -->
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div th:each="event : ${events}" class="col">
+                <div class="card h-100 shadow-sm event-card">
+                    <div class="card-body">
+                        <span class="badge bg-secondary mb-2" th:text="${event.type}">Type</span>
+                        <h5 class="card-title text-primary" th:text="${event.title}">Event Title</h5>
+                        <p class="text-muted small mb-2"><i class="bi bi-calendar"></i> <span th:text="${#temporals.format(event.date, 'dd MMM yyyy HH:mm')}">Date</span></p>
+                        <p class="text-muted small mb-3"><i class="bi bi-geo-alt"></i> <span th:text="${event.location}">Location</span></p>
+                        <p class="card-text text-truncate" th:text="${event.description}">Description...</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-top-0 pb-3">
+                        <a th:href="@{/events/{id}(id=${event.id})}" class="btn btn-outline-primary w-100">View Details</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div th:if="${#lists.isEmpty(events)}" class="col-12 text-center py-5">
+                <h4 class="text-muted">No events found matching your criteria.</h4>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <nav aria-label="Page navigation" class="mt-4" th:if="${totalPages > 1}">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                    <a class="page-link" th:href="@{/events(page=${currentPage - 1}, keyword=${keyword}, department=${department}, type=${type})}">Previous</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${currentPage == i} ? 'active'">
+                    <a class="page-link" th:href="@{/events(page=${i}, keyword=${keyword}, department=${department}, type=${type})}" th:text="${i + 1}">1</a>
+                </li>
+                <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                    <a class="page-link" th:href="@{/events(page=${currentPage + 1}, keyword=${keyword}, department=${department}, type=${type})}">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <div th:replace="~{fragments/header :: chatbot-widget}"></div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>
